@@ -4,12 +4,28 @@
  */
 package sporsalonuyonetimsistemi;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 /**
  *
  * @author apple
  */
 public class Login extends javax.swing.JFrame {
 
+    java.sql.Connection con = null;
+    PreparedStatement pst = null;
+    ResultSet rs = null, rs1 = null;
+    Statement st = null, st1 = null;
+    
+    static final String DB_URL = "jdbc:mysql://localhost:3306/SporSalonuDB";
+    static final String USER = "root";
+    static final String PASS = "";
+    
     /**
      * Creates new form Login
      */
@@ -28,12 +44,12 @@ public class Login extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        UsernameText = new javax.swing.JTextField();
+        PasswordText = new javax.swing.JPasswordField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        BtnLogin = new javax.swing.JButton();
+        BtnExit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -55,11 +71,10 @@ public class Login extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         jLabel1.setText("Spor Salonu Yönetim Sistemi");
 
-        jTextField1.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
-        jTextField1.setText("jTextField1");
+        UsernameText.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
 
-        jPasswordField1.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
-        jPasswordField1.setText("jPasswordField1");
+        PasswordText.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        PasswordText.setToolTipText("");
 
         jLabel2.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         jLabel2.setText("Kullanıcı adı:");
@@ -67,11 +82,21 @@ public class Login extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         jLabel3.setText("Şifre:");
 
-        jButton1.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
-        jButton1.setText("Giriş Yap");
+        BtnLogin.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        BtnLogin.setText("Giriş Yap");
+        BtnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnLoginActionPerformed(evt);
+            }
+        });
 
-        jButton2.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
-        jButton2.setText("Çıkış");
+        BtnExit.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        BtnExit.setText("Çıkış");
+        BtnExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnExitActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -90,14 +115,14 @@ public class Login extends javax.swing.JFrame {
                                     .addComponent(jLabel3))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(PasswordText, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(UsernameText, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(BtnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(BtnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(101, 101, 101))))
         );
         layout.setVerticalGroup(
@@ -108,16 +133,16 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(UsernameText, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(PasswordText, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addGap(31, 31, 31)
-                .addComponent(jButton1)
+                .addComponent(BtnLogin)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
+                .addComponent(BtnExit)
                 .addContainerGap(23, Short.MAX_VALUE))
         );
 
@@ -125,6 +150,66 @@ public class Login extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    // Uygulamadan çıkış.
+    private void BtnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnExitActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_BtnExitActionPerformed
+
+    
+    // Kullanıcı adı ve şifreyi doğrulayarak girişi onaylama.
+    private void BtnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLoginActionPerformed
+        String username = UsernameText.getText(); // Kullanıcı adını al
+        String password = new String(PasswordText.getPassword()); // Şifreyi al
+
+        try {
+            // Kullanıcının girdiği şifreyi hashle
+            String hashedPassword = hashPassword(password);
+
+            // Veritabanından kullanıcı bilgilerini al
+            con = DriverManager.getConnection(DB_URL, USER, PASS);
+            String selectQuery = "SELECT password FROM UsersTable WHERE username = ?";
+            pst = con.prepareStatement(selectQuery);
+            pst.setString(1, username);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                String storedPassword = rs.getString("password");
+                if (hashedPassword.equals(storedPassword)) {
+                    System.out.println("Kullanıcı girişi başarılı.");
+                    // Başarılı giriş sonrası yapılacak işlemler
+                } else {
+                    System.out.println("Hatalı şifre.");
+                    // Hatalı giriş durumunda yapılacak işlemler
+                }
+            } else {
+                System.out.println("Kullanıcı bulunamadı.");
+                // Kullanıcı bulunamadığında yapılacak işlemler
+            }
+
+            // Kaynakları kapat
+            rs.close();
+            pst.close();
+            con.close();
+            
+            new Members().setVisible(true);
+            this.dispose();
+        } catch (SQLException | NoSuchAlgorithmException ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_BtnLoginActionPerformed
+
+    // Şifreyi hashleme metodunu tanımla
+    public static String hashPassword(String password) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        md.update(password.getBytes());
+        byte[] byteData = md.digest();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < byteData.length; i++) {
+            sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        return sb.toString();
+    }
     /**
      * @param args the command line arguments
      */
@@ -161,13 +246,13 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton BtnExit;
+    private javax.swing.JButton BtnLogin;
+    private javax.swing.JPasswordField PasswordText;
+    private javax.swing.JTextField UsernameText;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

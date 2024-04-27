@@ -6,6 +6,7 @@ package sporsalonuyonetimsistemi;
 
 import java.sql.*;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
 /**
  *
@@ -35,6 +36,7 @@ public class Coachs extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -85,18 +87,33 @@ public class Coachs extends javax.swing.JFrame {
             }
         });
 
+        jLabel11.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("Admin Paneli");
+        jLabel11.setToolTipText("");
+        jLabel11.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel11MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(18, Short.MAX_VALUE)
+                .addComponent(jLabel11)
+                .addGap(15, 15, 15))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
+                        .addGap(27, 27, 27)
+                        .addComponent(jLabel3))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(41, 41, 41)
                         .addComponent(jLabel2)))
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                     .addContainerGap(37, Short.MAX_VALUE)
@@ -106,9 +123,11 @@ public class Coachs extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(45, 45, 45)
+                .addGap(49, 49, 49)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
                 .addGap(36, 36, 36))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -158,6 +177,11 @@ public class Coachs extends javax.swing.JFrame {
 
         DeleteBtn.setFont(new java.awt.Font("Helvetica Neue", 0, 15)); // NOI18N
         DeleteBtn.setText("SİL");
+        DeleteBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                DeleteBtnMouseClicked(evt);
+            }
+        });
         DeleteBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 DeleteBtnActionPerformed(evt);
@@ -179,6 +203,11 @@ public class Coachs extends javax.swing.JFrame {
 
         EditBtn.setFont(new java.awt.Font("Helvetica Neue", 0, 15)); // NOI18N
         EditBtn.setText("DÜZENLE");
+        EditBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                EditBtnMouseClicked(evt);
+            }
+        });
         EditBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 EditBtnActionPerformed(evt);
@@ -201,6 +230,11 @@ public class Coachs extends javax.swing.JFrame {
             }
         ));
         CoachTable.setRowHeight(24);
+        CoachTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                CoachTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(CoachTable);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -396,6 +430,67 @@ public class Coachs extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_AddBtnMouseClicked
+int Key = 0;
+    private void CoachTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CoachTableMouseClicked
+        DefaultTableModel model = (DefaultTableModel)CoachTable.getModel();
+        int MyIndex = CoachTable.getSelectedRow();
+        Key = Integer.valueOf(model.getValueAt(MyIndex, 0).toString());
+        CNameText.setText(model.getValueAt(MyIndex, 1).toString());
+        CPhoneText.setText(model.getValueAt(MyIndex, 2).toString());
+        CAgeText.setText(model.getValueAt(MyIndex, 3).toString());
+        CAdressText.setText(model.getValueAt(MyIndex, 4).toString());
+        CGenderCombobox.setSelectedItem(model.getValueAt(MyIndex, 5).toString());
+    }//GEN-LAST:event_CoachTableMouseClicked
+
+    private void DeleteBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DeleteBtnMouseClicked
+        if(Key == 0)
+        {
+            JOptionPane.showMessageDialog(this, "Hangi Eğitmenin Silineceğini Seçin ");
+        }else{
+            try {
+                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SporSalonuDB", "root", "");
+                String Query ="Delete from CoachTable where CId="+Key;
+                Statement Del = con.createStatement();
+                Del.executeUpdate(Query);
+                JOptionPane.showMessageDialog(this, "Eğitmen Silindi");
+                DisplayCoachs();
+            }catch (Exception e) {
+                JOptionPane.showMessageDialog(this, e);
+                   
+        }
+            
+        }
+    }//GEN-LAST:event_DeleteBtnMouseClicked
+
+    private void EditBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_EditBtnMouseClicked
+        if(Key==0){
+            
+        }else{
+            try{
+                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SporSalonuDB", "root", "");
+                String Query ="Update CoachTable set CName=?,CPhone=?,CAge=?,CAdress=?,CGender=? where CId=?";
+                PreparedStatement Edit= con.prepareStatement(Query);
+                Edit.setString(1,CNameText.getText());
+                Edit.setString(2,CPhoneText.getText());
+                Edit.setInt(3, Integer.valueOf(CAgeText.getText()));
+                Edit.setString(4, CAdressText.getText());
+                Edit.setString(5, CGenderCombobox.getSelectedItem().toString());
+                Edit.setInt(6, Key);
+                int row = Edit.executeUpdate();
+                JOptionPane.showMessageDialog(this, "Eğitmen Düzenlendi.");
+                con.close();
+                DisplayCoachs();
+                
+            }catch(Exception e){
+                
+            }
+        }
+    }//GEN-LAST:event_EditBtnMouseClicked
+
+    private void jLabel11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel11MouseClicked
+        new AdminPanel().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jLabel11MouseClicked
 
     /**
      * @param args the command line arguments
@@ -444,6 +539,7 @@ public class Coachs extends javax.swing.JFrame {
     private javax.swing.JButton EditBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
