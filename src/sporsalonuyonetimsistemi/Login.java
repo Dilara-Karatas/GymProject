@@ -177,6 +177,8 @@ public class Login extends javax.swing.JFrame {
                 String storedPassword = rs.getString("password");
                 if (hashedPassword.equals(storedPassword)) {
                     System.out.println("Kullanıcı girişi başarılı.");
+                    new Members().setVisible(true);
+                    this.dispose();
                     // Başarılı giriş sonrası yapılacak işlemler
                 } else {
                     System.out.println("Hatalı şifre.");
@@ -192,8 +194,6 @@ public class Login extends javax.swing.JFrame {
             pst.close();
             con.close();
             
-            new Members().setVisible(true);
-            this.dispose();
         } catch (SQLException | NoSuchAlgorithmException ex) {
             ex.printStackTrace();
         }
